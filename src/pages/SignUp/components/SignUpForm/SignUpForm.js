@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 // HOCs
 import { withFirebase } from '../../../../components/Firebase';
@@ -23,13 +24,13 @@ class SignUpForm extends Component {
 
   onSubmit = event => {
     const {
-      state: { username, email, passwordOne },
+      state: { email, passwordOne },
       props: { firebase, history },
     } = this;
 
     firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
-      .then(authUser => {
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
         history.push(ROUTES.HOME);
       })
@@ -68,6 +69,15 @@ class SignUpForm extends Component {
     );
   }
 }
+
+SignUpForm.propTypes = {
+  firebase: PropTypes.shape({
+    doCreateUserWithEmailAndPassword: PropTypes.func.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default compose(
   withRouter,

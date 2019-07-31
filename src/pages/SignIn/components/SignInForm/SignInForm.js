@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { compose } from 'recompose';
-
+import { connect } from 'react-redux';
+// HOCs
+import { withRouter } from 'react-router-dom';
 import { withFirebase } from '../../../../components/Firebase';
+// consts
 import * as ROUTES from '../../../../consts/routes';
+// actions
+import { userSignIn } from '../../../../store/user/user';
 
 const INITIAL_STATE = {
   email: '',
@@ -60,7 +65,24 @@ class SignIn extends Component {
   }
 }
 
+SignIn.propTypes = {
+  firebase: PropTypes.shape({
+    doSignInWithEmailAndPassword: PropTypes.func.isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+const mapDispatchToProps = {
+  userSignIn,
+};
+
 export default compose(
   withRouter,
-  withFirebase
+  withFirebase,
+  connect(
+    null,
+    mapDispatchToProps
+  )
 )(SignIn);
